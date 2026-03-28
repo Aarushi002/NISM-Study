@@ -1,4 +1,5 @@
 import './DecorScene.css';
+import { CornerFloats } from './CornerFloats.jsx';
 
 const TICKERS = [
   'NIFTY ▲',
@@ -38,6 +39,7 @@ export function DecorScene({ mood = 'default' }) {
       </div>
       <div className="orb orb-a" />
       <div className="orb orb-b" />
+      <CornerFloats />
     </div>
   );
 }

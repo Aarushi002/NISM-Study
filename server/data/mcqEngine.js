@@ -1,6 +1,9 @@
 /**
  * 1020+ MCQs (102 per level × 10 levels) for NISM Series XV Research Analyst prep.
  * Explanations distinguish correct vs incorrect options per SEBI/NISM-style reasoning.
+ *
+ * Seed bank: each item is checked at load time (correct index 0–3, four options, three wrong-option notes).
+ * For the live exam, always cross-check with the official NISM workbook and current SEBI circulars.
  */
 
 const LEVEL_FOCUS = [
@@ -460,6 +463,29 @@ addTopic(10, 'RSI is best categorized as:', [
     'Dividend policy is corporate policy, not an indicator.',
   ],
 });
+
+function validateMcqSeeds() {
+  for (const t of TOPIC_BANK) {
+    if (!Array.isArray(t.opts) || t.opts.length !== 4) {
+      throw new Error(`MCQ seed: need 4 options — "${t.stem?.slice(0, 48)}…"`);
+    }
+    if (t.correctIdx < 0 || t.correctIdx > 3 || !Number.isInteger(t.correctIdx)) {
+      throw new Error(`MCQ seed: correctIdx must be 0–3 — "${t.stem?.slice(0, 48)}…"`);
+    }
+    const wrongN = [0, 1, 2, 3].filter((i) => i !== t.correctIdx).length;
+    if (!t.explain?.w || t.explain.w.length !== wrongN) {
+      throw new Error(`MCQ seed: explain.w must have ${wrongN} entries — "${t.stem?.slice(0, 48)}…"`);
+    }
+    if (!t.explain?.c || typeof t.explain.c !== 'string') {
+      throw new Error(`MCQ seed: missing explain.c — "${t.stem?.slice(0, 48)}…"`);
+    }
+    if (t.opts[t.correctIdx] === undefined) {
+      throw new Error(`MCQ seed: correct option missing — "${t.stem?.slice(0, 48)}…"`);
+    }
+  }
+}
+
+validateMcqSeeds();
 
 function hashString(s) {
   let h = 2166136261;

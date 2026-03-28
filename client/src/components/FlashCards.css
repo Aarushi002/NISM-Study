@@ -5,6 +5,19 @@
   min-width: 0;
 }
 
+.flash-intro {
+  margin: 0;
+  font-size: clamp(0.88rem, 2vw, 0.98rem);
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 75ch;
+}
+
+.flash-intro strong {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
 .flash-loading,
 .flash-error {
   text-align: center;
@@ -105,18 +118,17 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: clamp(0.5rem, 2vw, 0.85rem);
-  align-items: center;
+  align-items: stretch;
   min-width: 0;
 }
 
-/* Phones & narrow tablets: card full width, nav buttons in a bottom row */
 @media (max-width: 560px) {
   .flash-stage {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
   }
 
-  .flash-card-wrap {
+  .flash-card-panel {
     grid-column: 1 / -1;
     grid-row: 1;
   }
@@ -138,9 +150,10 @@
 
 .flash-nav {
   width: clamp(44px, 12vw, 52px);
-  height: clamp(44px, 12vw, 52px);
+  height: auto;
   min-width: var(--tap-min);
   min-height: var(--tap-min);
+  align-self: center;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: rgba(15, 23, 42, 0.65);
@@ -154,8 +167,6 @@
 @media (max-width: 560px) {
   .flash-nav {
     width: 100%;
-    height: auto;
-    min-height: var(--tap-min);
   }
 }
 
@@ -164,83 +175,70 @@
   border-color: rgba(94, 234, 212, 0.4);
 }
 
-.flash-nav:active {
-  transform: translateY(0);
-}
-
-.flash-card-wrap {
-  perspective: 1200px;
-  border: none;
-  padding: 0;
-  background: none;
-  cursor: pointer;
-  min-height: clamp(220px, 45vh, 320px);
-  min-width: 0;
-  width: 100%;
-}
-
-.flash-card {
-  position: relative;
-  width: 100%;
-  min-height: clamp(220px, 45vh, 320px);
-  transform-style: preserve-3d;
-  transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
-}
-
-.flash-card-wrap.is-flipped .flash-card {
-  transform: rotateY(180deg);
-}
-
-.flash-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  border-radius: clamp(0.75rem, 2vw, 1rem);
-  padding: clamp(1rem, 3vw, 1.35rem);
-  border: 1px solid var(--border);
+.flash-card-panel {
   background: linear-gradient(155deg, rgba(18, 26, 46, 0.98), rgba(10, 16, 30, 0.96));
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: clamp(0.85rem, 2vw, 1.1rem);
+  padding: clamp(1rem, 3vw, 1.5rem);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  min-height: clamp(280px, 50vh, 520px);
+  max-height: min(70vh, 640px);
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  min-width: 0;
 }
 
-.flash-back {
-  transform: rotateY(180deg);
-  background: linear-gradient(155deg, rgba(16, 36, 40, 0.95), rgba(10, 22, 32, 0.96));
+.flash-card-head {
+  margin-bottom: clamp(0.85rem, 2vw, 1.1rem);
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
 }
 
-.flash-kicker {
-  font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+.flash-badge {
+  display: inline-block;
+  font-size: clamp(0.68rem, 1.5vw, 0.78rem);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--muted);
-  flex-shrink: 0;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 0.45rem;
 }
 
-.flash-text {
+.flash-title {
   margin: 0;
-  font-size: clamp(0.95rem, 2.2vw + 0.75rem, 1.1rem);
-  line-height: 1.55;
-  flex: 1;
+  font-size: clamp(1.15rem, 2.8vw + 0.6rem, 1.45rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.flash-body {
+  font-size: clamp(0.9rem, 2vw + 0.2rem, 1rem);
+  line-height: 1.6;
+  color: #e2e8f0;
+}
+
+.flash-section-title {
+  margin: 1rem 0 0.5rem;
+  font-size: clamp(0.78rem, 1.6vw, 0.88rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.flash-section-title:first-child {
+  margin-top: 0;
+}
+
+.flash-line {
+  margin: 0 0 0.45rem;
   overflow-wrap: anywhere;
   word-break: break-word;
-  hyphens: auto;
 }
 
-.flash-hint {
-  font-size: clamp(0.75rem, 2vw, 0.85rem);
-  color: var(--muted);
-  flex-shrink: 0;
-}
-
-.flash-meta {
-  font-size: clamp(0.72rem, 1.8vw, 0.82rem);
-  color: var(--muted);
-  flex-shrink: 0;
+.flash-line:last-child {
+  margin-bottom: 0;
 }
 
 .flash-actions {
@@ -273,15 +271,11 @@
 }
 
 @media (min-width: 1920px) {
-  .flash-card-wrap {
-    min-height: clamp(280px, 38vh, 400px);
+  .flash-card-panel {
+    max-height: min(65vh, 720px);
   }
 
-  .flash-card {
-    min-height: clamp(280px, 38vh, 400px);
-  }
-
-  .flash-text {
-    font-size: clamp(1.05rem, 1.2vw, 1.2rem);
+  .flash-title {
+    font-size: clamp(1.25rem, 1.4vw, 1.55rem);
   }
 }

@@ -43,9 +43,11 @@ export default function App() {
 
         <p className="disclaimer">
           <strong>Disclaimer.</strong> This app is an independent study aid. It is not affiliated with
-          NISM or SEBI. Certification candidates should rely on the official NISM workbook (November 2025
-          version for exams on or after 20 Jan 2026) and current regulations. Market scenarios mentioning
-          global policy or public figures are illustrative overlays for learning animations only.
+          NISM or SEBI. Flash cards and mock-test answers follow standard NISM XV syllabus themes and
+          widely accepted finance and regulatory concepts; for exact examination wording and the latest
+          rules, use the official NISM workbook (November 2025 version for exams on or after 20 Jan 2026)
+          and current SEBI circulars. Decorative animations mentioning policy or public figures are for
+          learning context only.
         </p>
       </div>
     </>

@@ -8,7 +8,6 @@ export function FlashCards() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState(null);
   const [idx, setIdx] = useState(0);
-  const [flipped, setFlipped] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -40,7 +39,6 @@ export function FlashCards() {
   const go = useCallback(
     (delta) => {
       if (!total) return;
-      setFlipped(false);
       setIdx((i) => (i + delta + total) % total);
     },
     [total],
@@ -48,7 +46,6 @@ export function FlashCards() {
 
   const shuffle = useCallback(() => {
     if (!total) return;
-    setFlipped(false);
     setIdx(Math.floor(Math.random() * total));
   }, [total]);
 
@@ -64,10 +61,7 @@ export function FlashCards() {
 
   const jumpChapter = (label) => {
     const list = chapters.get(label);
-    if (list?.length) {
-      setFlipped(false);
-      setIdx(list[0]);
-    }
+    if (list?.length) setIdx(list[0]);
   };
 
   if (loading) {
@@ -85,10 +79,14 @@ export function FlashCards() {
 
   return (
     <div className="flash-root">
+      <p className="flash-intro">
+        Each card gives a <strong>high-yield topic</strong> and <strong>exam-style notes</strong> — definition,
+        how questions are framed, and a quick recall check. Work through all {total} cards in line with the NISM
+        Series XV syllabus.
+      </p>
+
       <div className="flash-toolbar">
-        <div className="flash-stats mono">
-          {total} cards · NISM Series XV (workbook themes)
-        </div>
+        <div className="flash-stats mono">{total} cards · exam-focused notes</div>
         <div className="flash-chapter-jump">
           <label htmlFor="ch-jump">Jump to chapter</label>
           <select
@@ -120,24 +118,38 @@ export function FlashCards() {
           ‹
         </button>
 
-        <button
-          type="button"
-          className={`flash-card-wrap ${flipped ? 'is-flipped' : ''}`}
-          onClick={() => setFlipped((f) => !f)}
-        >
-          <div className="flash-card">
-            <div className="flash-face flash-front">
-              <span className="flash-kicker">Front</span>
-              <p className="flash-text">{card?.front}</p>
-              <span className="flash-hint">Tap to flip</span>
-            </div>
-            <div className="flash-face flash-back">
-              <span className="flash-kicker">Back</span>
-              <p className="flash-text">{card?.back}</p>
-              <span className="flash-meta mono">{card?.chapterLabel}</span>
-            </div>
+        <article className="flash-card-panel" aria-live="polite">
+          <header className="flash-card-head">
+            <span className="flash-badge mono">{card?.chapterLabel}</span>
+            <h2 className="flash-title">{card?.front}</h2>
+          </header>
+          <div className="flash-body">
+            {card?.back?.split('\n').map((line, i) => {
+              const trimmed = line.trim();
+              if (!trimmed) return <br key={`br-${i}`} />;
+              const isHeading =
+                [
+                  'Definition',
+                  'Why this matters on the exam',
+                  'How to use this in MCQs',
+                  '30-second recall',
+                  'Authoritative sources',
+                ].includes(trimmed);
+              if (isHeading) {
+                return (
+                  <h3 key={i} className="flash-section-title">
+                    {trimmed}
+                  </h3>
+                );
+              }
+              return (
+                <p key={i} className="flash-line">
+                  {line}
+                </p>
+              );
+            })}
           </div>
-        </button>
+        </article>
 
         <button type="button" className="flash-nav" onClick={() => go(1)} aria-label="Next card">
           ›

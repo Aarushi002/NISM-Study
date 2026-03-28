@@ -1,0 +1,174 @@
+.corner-floats {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.corner-float {
+  position: absolute;
+  width: clamp(56px, 11vw, 96px);
+  height: clamp(56px, 11vw, 96px);
+  border-radius: 50%;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 0 2px rgba(94, 234, 212, 0.2);
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.corner-float--tl {
+  top: max(5.5rem, env(safe-area-inset-top, 0px) + 4.5rem);
+  left: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.corner-float--tr {
+  top: max(5.5rem, env(safe-area-inset-top, 0px) + 4.5rem);
+  right: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+/* Sit above decorative candle cluster */
+.corner-float--bl {
+  bottom: max(4.5rem, env(safe-area-inset-bottom, 0px) + 3rem);
+  left: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.corner-float--br {
+  bottom: max(4.5rem, env(safe-area-inset-bottom, 0px) + 3rem);
+  right: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.corner-float__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.corner-float__svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.corner-float__sebi {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: linear-gradient(145deg, #0f172a 0%, #134e4a 55%, #0f172a 100%);
+  padding: 6px;
+}
+
+.corner-float__sebi-flag {
+  width: 28px;
+  height: 6px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #ff9933 0%, #ff9933 33%, #fff 33%, #fff 66%, #138808 66%, #138808 100%);
+  opacity: 0.95;
+}
+
+.corner-float__sebi-text {
+  font-family: system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+  letter-spacing: 0.12em;
+  color: #5eead4;
+}
+
+.corner-float__sebi-sub {
+  font-size: clamp(0.5rem, 1.2vw, 0.62rem);
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.corner-float--anim-a {
+  animation: corner-float-a 7s ease-in-out infinite;
+}
+
+.corner-float--anim-b {
+  animation: corner-float-b 8.5s ease-in-out infinite;
+  animation-delay: -1s;
+}
+
+.corner-float--anim-c {
+  animation: corner-float-c 7.5s ease-in-out infinite;
+  animation-delay: -2.5s;
+}
+
+.corner-float--anim-d {
+  animation: corner-float-d 9s ease-in-out infinite;
+  animation-delay: -0.5s;
+}
+
+@keyframes corner-float-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(6px, -10px, 0) rotate(3deg);
+  }
+  66% {
+    transform: translate3d(-4px, 6px, 0) rotate(-2deg);
+  }
+}
+
+@keyframes corner-float-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-8px, 8px, 0) rotate(-4deg);
+  }
+}
+
+@keyframes corner-float-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  40% {
+    transform: translate3d(10px, 4px, 0) rotate(4deg);
+  }
+  80% {
+    transform: translate3d(-6px, -8px, 0) rotate(-3deg);
+  }
+}
+
+@keyframes corner-float-d {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(5px, -12px, 0) scale(1.04);
+  }
+}
+
+@media (max-width: 520px) {
+  .corner-float {
+    width: clamp(44px, 16vw, 64px);
+    height: clamp(44px, 16vw, 64px);
+    opacity: 0.85;
+  }
+
+  .corner-float--tl,
+  .corner-float--tr {
+    top: max(4.75rem, env(safe-area-inset-top, 0px) + 3.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .corner-float--anim-a,
+  .corner-float--anim-b,
+  .corner-float--anim-c,
+  .corner-float--anim-d {
+    animation: none;
+  }
+}
