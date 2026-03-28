@@ -1,0 +1,287 @@
+.flash-root {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.85rem, 2.5vw, 1.15rem);
+  min-width: 0;
+}
+
+.flash-loading,
+.flash-error {
+  text-align: center;
+  color: var(--muted);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.spinner {
+  width: clamp(32px, 8vw, 40px);
+  height: clamp(32px, 8vw, 40px);
+  border-radius: 50%;
+  border: 3px solid rgba(148, 163, 184, 0.25);
+  border-top-color: var(--accent);
+  margin: 0 auto 0.75rem;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.flash-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  align-items: stretch;
+}
+
+@media (max-width: 640px) {
+  .flash-toolbar {
+    flex-direction: column;
+  }
+}
+
+.flash-stats {
+  font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+  color: var(--muted);
+}
+
+.flash-chapter-jump {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+  color: var(--muted);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .flash-chapter-jump {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .flash-chapter-jump label {
+    font-weight: 600;
+  }
+}
+
+.flash-chapter-jump select {
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  min-height: var(--tap-min);
+  width: 100%;
+  max-width: min(100%, 28rem);
+}
+
+@media (min-width: 641px) {
+  .flash-chapter-jump select {
+    width: auto;
+    min-width: min(16rem, 100%);
+  }
+}
+
+.flash-progress {
+  height: max(4px, 0.35rem);
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.flash-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.flash-stage {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: clamp(0.5rem, 2vw, 0.85rem);
+  align-items: center;
+  min-width: 0;
+}
+
+/* Phones & narrow tablets: card full width, nav buttons in a bottom row */
+@media (max-width: 560px) {
+  .flash-stage {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .flash-card-wrap {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .flash-nav:first-of-type {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    min-height: var(--tap-min);
+  }
+
+  .flash-nav:last-of-type {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    min-height: var(--tap-min);
+  }
+}
+
+.flash-nav {
+  width: clamp(44px, 12vw, 52px);
+  height: clamp(44px, 12vw, 52px);
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.65);
+  color: var(--text);
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+@media (max-width: 560px) {
+  .flash-nav {
+    width: 100%;
+    height: auto;
+    min-height: var(--tap-min);
+  }
+}
+
+.flash-nav:hover {
+  transform: translateY(-1px);
+  border-color: rgba(94, 234, 212, 0.4);
+}
+
+.flash-nav:active {
+  transform: translateY(0);
+}
+
+.flash-card-wrap {
+  perspective: 1200px;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  min-height: clamp(220px, 45vh, 320px);
+  min-width: 0;
+  width: 100%;
+}
+
+.flash-card {
+  position: relative;
+  width: 100%;
+  min-height: clamp(220px, 45vh, 320px);
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.flash-card-wrap.is-flipped .flash-card {
+  transform: rotateY(180deg);
+}
+
+.flash-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: clamp(0.75rem, 2vw, 1rem);
+  padding: clamp(1rem, 3vw, 1.35rem);
+  border: 1px solid var(--border);
+  background: linear-gradient(155deg, rgba(18, 26, 46, 0.98), rgba(10, 16, 30, 0.96));
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.flash-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(155deg, rgba(16, 36, 40, 0.95), rgba(10, 22, 32, 0.96));
+}
+
+.flash-kicker {
+  font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.flash-text {
+  margin: 0;
+  font-size: clamp(0.95rem, 2.2vw + 0.75rem, 1.1rem);
+  line-height: 1.55;
+  flex: 1;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.flash-hint {
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.flash-meta {
+  font-size: clamp(0.72rem, 1.8vw, 0.82rem);
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.flash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(0.65rem, 2vw, 1rem);
+}
+
+.btn.ghost {
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.55);
+  color: var(--text);
+  padding: 0.55rem 1rem;
+  min-height: var(--tap-min);
+  border-radius: 0.65rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+}
+
+.btn.ghost:hover {
+  border-color: rgba(94, 234, 212, 0.45);
+}
+
+.flash-counter {
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  color: var(--muted);
+}
+
+@media (min-width: 1920px) {
+  .flash-card-wrap {
+    min-height: clamp(280px, 38vh, 400px);
+  }
+
+  .flash-card {
+    min-height: clamp(280px, 38vh, 400px);
+  }
+
+  .flash-text {
+    font-size: clamp(1.05rem, 1.2vw, 1.2rem);
+  }
+}

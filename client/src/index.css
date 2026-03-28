@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #070a12;
+  --bg2: #0d1324;
+  --card: #121a2e;
+  --border: rgba(94, 234, 212, 0.15);
+  --accent: #5eead4;
+  --accent2: #38bdf8;
+  --danger: #f87171;
+  --ok: #4ade80;
+  --text: #e8edf7;
+  --muted: #94a3b8;
+  --gold: #fbbf24;
+
+  /* Layout — scales from phones to TVs */
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --pad-x: clamp(0.75rem, 2.5vw, 2rem);
+  --pad-y: clamp(0.75rem, 2vw, 1.5rem);
+  --content-max: min(72rem, 100vw - 2 * var(--pad-x));
+  --tap-min: 2.75rem;
+  --text-base: clamp(0.9375rem, 0.35vw + 0.88rem, 1.0625rem);
+  --text-lead: clamp(1rem, 0.5vw + 0.9rem, 1.125rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  background: radial-gradient(1200px 800px at 10% -10%, rgba(56, 189, 248, 0.12), transparent),
+    radial-gradient(900px 600px at 100% 0%, rgba(94, 234, 212, 0.08), transparent), var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l);
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+code,
+.mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.92em;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: var(--accent2);
+  text-underline-offset: 0.15em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .decor-scene,
+  .decor-scene *,
+  .mock-question-card,
+  .mock-question-card::before,
+  .mock-question-card.anim-a,
+  .mock-question-card.anim-b,
+  .mock-question-card.anim-c,
+  .mock-question-card.anim-d,
+  .mock-question-card.anim-e,
+  .flash-card,
+  .flash-card-wrap,
+  .spinner,
+  .flash-progress-fill {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Large desktop & smart TV: comfortable reading distance */
+@media (min-width: 1600px) {
+  :root {
+    --text-base: clamp(1rem, 0.25vw + 0.95rem, 1.125rem);
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --content-max: min(80rem, 92vw);
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    --text-base: 1.125rem;
+    --tap-min: 3rem;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "nism-research-analyst-prep",
+  "private": true,
+  "version": "1.0.0",
+  "description": "NISM Series XV Research Analyst — flash cards & mock tests",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "npm run dev --prefix client",
+    "server": "node server/index.js",
+    "build": "npm run build --prefix client",
+    "start": "node server/index.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
