@@ -1,7 +1,7 @@
 /**
  * 1020 MCQs (102 per level × 10 levels) for NISM Series XV Research Analyst prep.
- * Questions are generated from the official workbook text (see scripts/build_mcq_from_workbook.py
- * and server/data/workbook_extract.txt / mcqBank1020.json). Regenerate JSON after updating the extract.
+ * Question bank is built from curated syllabus concepts (server/data/concepts170.jsonl) — edit seeds,
+ * then run: python scripts/build_sensible_mcq_bank.py → mcqBank1020.json
  */
 
 import fs from 'fs';
@@ -96,7 +96,7 @@ function synthQuestion(level, seq) {
     correctIndex,
     whyCorrect,
     optionDetail,
-    summaryWhenWrong: `The correct choice matches the cited workbook passage: ${whyCorrect}`,
+    summaryWhenWrong: `The keyed correct answer: ${whyCorrect}`,
   };
 }
 
