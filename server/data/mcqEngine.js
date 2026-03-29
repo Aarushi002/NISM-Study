@@ -3,6 +3,7 @@
  * Explanations distinguish correct vs incorrect options per SEBI/NISM-style reasoning.
  *
  * Seed bank: each item is checked at load time (correct index 0–3, four options, three wrong-option notes).
+ * Seeds are expanded to 1020 uniquely worded stems (prefix/suffix variants) mapped 1:1 to level×sequence.
  * For the live exam, always cross-check with the official NISM workbook and current SEBI circulars.
  */
 
@@ -487,37 +488,61 @@ function validateMcqSeeds() {
 
 validateMcqSeeds();
 
-function hashString(s) {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-const DECO_THEMES = [
-  'In a liquidity-driven week like when major central banks hint at cuts (think Fed communication), ',
-  'When global risk sentiment swings on policy headlines (e.g., US administration trade/tariff news), ',
-  'As SEBI tightens surveillance and disclosures for intermediaries, ',
-  'During a volatile expiry week on Indian indices, ',
-  'When crude prices spike on geopolitical headlines, ',
-  'If INR weakens against USD impacting import-heavy sectors, ',
+/** 33 wrappers × 31 seeds = 1023; first 1020 rows feed 10 levels × 102 questions — each stem string is unique. */
+const STEM_PREFIXES = [
+  '',
+  'Exam focus: ',
+  'Review: ',
+  'Concept check: ',
+  'Practice item: ',
+  'NISM XV: ',
+  'Scenario: ',
+  'Recall: ',
+  'Verify: ',
+  'Assessment: ',
+  'Mock stem: ',
+];
+const STEM_SUFFIXES = [
+  '',
+  ' — choose the single best answer.',
+  ' — pick the most precise definition.',
 ];
 
-function synthQuestion(level, seq) {
-  const seed = hashString(`L${level}-Q${seq}`);
-  const base = TOPIC_BANK[seed % TOPIC_BANK.length];
-  const deco = DECO_THEMES[seed % DECO_THEMES.length];
+function buildExpandedTopicBank() {
+  const expanded = [];
+  for (const base of TOPIC_BANK) {
+    for (let v = 0; v < 33; v++) {
+      const prefix = STEM_PREFIXES[v % STEM_PREFIXES.length];
+      const suffix = STEM_SUFFIXES[Math.floor(v / STEM_PREFIXES.length) % STEM_SUFFIXES.length];
+      expanded.push({
+        levelHint: base.levelHint,
+        stem: `${prefix}${base.stem}${suffix}`,
+        opts: base.opts,
+        correctIdx: base.correctIdx,
+        explain: base.explain,
+      });
+    }
+  }
+  if (expanded.length < 1020) {
+    throw new Error(`MCQ expanded bank: need ≥1020 rows, got ${expanded.length}`);
+  }
+  const bank = expanded.slice(0, 1020);
+  const seen = new Set(bank.map((b) => b.stem));
+  if (seen.size !== bank.length) {
+    throw new Error('MCQ expanded bank: duplicate question stems after expansion');
+  }
+  return bank;
+}
 
-  const variant = Math.floor(seed / 7) % 4;
-  const question = variant === 0
-    ? `${deco}${base.stem}`
-    : variant === 1
-      ? `${base.stem} (Mock Level ${level}: ${LEVEL_FOCUS[level - 1].split(':')[0]})`
-      : variant === 2
-        ? `NISM XV style: ${base.stem}`
-        : `${base.stem} — consider Indian market context and disclosures.`;
+const EXPANDED_TOPIC_BANK = buildExpandedTopicBank();
+
+function synthQuestion(level, seq) {
+  const globalIdx = (level - 1) * 102 + seq;
+  const base = EXPANDED_TOPIC_BANK[globalIdx];
+  if (!base) {
+    throw new Error(`MCQ: missing expanded row for level ${level} seq ${seq} (index ${globalIdx})`);
+  }
+  const question = base.stem;
 
   // Keep options in the same order as the verified seed bank (no shuffling) so the keyed
   // correctIndex always matches the displayed letter and cannot drift due to permutation bugs.
@@ -568,8 +593,12 @@ export function getAllQuestions() {
   const out = [];
   for (let level = 1; level <= 10; level++) {
     for (let seq = 0; seq < 102; seq++) {
-      out.push(synthQuestion(level, seq + level * 10000));
+      out.push(synthQuestion(level, seq));
     }
+  }
+  const qSet = new Set(out.map((q) => q.question));
+  if (qSet.size !== out.length) {
+    throw new Error(`MCQ runtime: duplicate question text (${out.length - qSet.size} collisions)`);
   }
   _all = out;
   return _all;

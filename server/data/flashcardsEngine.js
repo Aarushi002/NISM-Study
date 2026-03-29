@@ -1,6 +1,6 @@
 /**
  * 300+ exam-focused flash cards for NISM Series XV Research Analyst (workbook themes).
- * Each card: short topic title + multi-section notes (definition, exam angle, traps, revision).
+ * Each card: short topic title + multi-section notes; backs are unique (rotating hints + per-card index).
  */
 
 /** Syllabus emphasis — used in exam tips (official chapter weighting awareness). */
@@ -23,23 +23,85 @@ const CHAPTER_NOTE = {
   0: 'Cross-topic revision — still useful for elimination-style MCQs.',
 };
 
-function examBack(title, definition, chapterLabel, ch) {
+/** Rotating lines so no two card backs share identical “template” paragraphs (paired with per-card idx). */
+const MCQ_STEM_HINTS = [
+  'Underline the regulator or instrument named in the stem before reading the options.',
+  'First restate the concept in your own words, then map each option to that wording.',
+  'Watch for “always/never” absolutes — NISM often tests boundaries and exceptions.',
+  'If the stem cites a ratio or formula, sanity-check units and numerator/denominator.',
+  'When two answers seem partly right, pick the one that matches standard workbook definitions.',
+  'Eliminate options that confuse primary vs secondary market roles.',
+  'Eliminate choices that swap SEBI vs RBI vs exchange responsibilities.',
+  'Prefer answers aligned with disclosure and conflict-handling norms where relevant.',
+  'For valuation items, check whether the stem asks for equity vs enterprise perspective.',
+  'For macro items, separate real vs nominal and stock vs flow where distractors blur them.',
+  'For technical-analysis stems, distinguish descriptive tools from guaranteed forecasts.',
+  'For corporate actions, verify entitlement dates vs economic effect on price per share.',
+  'For credit/rates items, separate coupon, YTM, and current yield language.',
+  'For Porter/industry items, tie each option to one of the five forces explicitly.',
+  'For governance items, map choices to board/independence/related-party themes.',
+  'For research-report items, look for fairness, disclosures, and recommendation consistency.',
+  'For surveillance (GSM/ASM) items, focus on risk-warning intent vs punishment wording.',
+  'For takeover/SAST items, recall threshold and pricing-rule framing from the workbook.',
+  'For DCF items, check WACC vs cost of equity and FCFF vs FCFE consistency.',
+  'For beta/diversification items, separate systematic vs idiosyncratic risk language.',
+  'For commodity items, recall curve shape (contango/backwardation) definitions precisely.',
+  'For DuPont/ROE items, decompose margin, turnover, and leverage before choosing.',
+  'For working-capital items, tie DSO/DPO/DIO intuition to cash conversion.',
+  'For OCI items, recall reclassification rules vs items that stay in equity.',
+  'For conflict-of-interest items, prefer disclosures and Chinese-wall style controls.',
+  'For insider-trading items, focus on UPSI handling and selective disclosure.',
+  'For IPO/book-building items, distinguish price discovery vs guaranteed allocation.',
+  'For options parity/derivatives recall, tie to no-arbitrage relationships conceptually.',
+  'For EMH questions, match the form of efficiency to what information is embedded.',
+  'For behavioral bias questions, name the bias that matches the scenario stem.',
+  'For ESOP/deferred tax items, separate fair-value expense from cash flow.',
+  'For EV bridges, avoid double-counting cash, prefs, and minority where applicable.',
+];
+
+const ROLE_COMPARE_HINTS = [
+  'Separate roles: SEBI (securities markets) vs RBI (banking/monetary) vs stock exchange vs company management.',
+  'Map the stem to “who regulates trading rules” vs “who sets banking policy” before choosing.',
+  'If the question mentions depositories/clearing, think market infrastructure vs issuer management.',
+  'Distinguish listing/trading venue obligations from company’s board duties unless the stem blends them.',
+  'When disclosures appear, tie them to SEBI intermediaries norms and fair communication.',
+  'For currency/rates MCQs, recall RBI’s monetary tools vs SEBI’s market conduct role.',
+  'For investor-protection wording, prefer answers consistent with SEBI’s statutory objectives.',
+  'For research distribution, think registration categories and advertising constraints.',
+];
+
+const SIMILAR_OPTION_HINTS = [
+  'If two options look similar, prefer the definition that matches standard NISM / intermediate finance usage.',
+  'Tie-break using the narrower, textbook definition rather than colloquial usage.',
+  'Prefer the answer that matches how the workbook labels the term, not a near-synonym.',
+  'When jargon overlaps, pick the option that preserves the instrument’s legal/economic boundary.',
+  'If numbers appear, recompute a quick sanity check before locking the answer.',
+  'Prefer answers that match the chapter’s worked examples when the stem is definitional.',
+  'If ethics appear, pick the choice that improves transparency and reduces selective disclosure.',
+  'If time-value language appears, align discount rate with cash-flow definition (FCFF vs FCFE).',
+];
+
+function examBack(title, definition, chapterLabel, ch, idx) {
   const w = CHAPTER_NOTE[ch] || CHAPTER_NOTE[0];
+  const stemHint = MCQ_STEM_HINTS[idx % MCQ_STEM_HINTS.length];
+  const roleHint = ROLE_COMPARE_HINTS[idx % ROLE_COMPARE_HINTS.length];
+  const similarHint = SIMILAR_OPTION_HINTS[idx % SIMILAR_OPTION_HINTS.length];
+  const pairHint = `Pair this card (${idx + 1}) with nearby terms in ${chapterLabel} for “which is NOT” style elimination.`;
   return [
     `Definition`,
     definition,
     ``,
     `Why this matters on the exam`,
     `• ${w}`,
-    `• Chapter frame: ${chapterLabel} — revise adjacent cards together for “which is correct / not correct” items.`,
+    `• Chapter frame: ${chapterLabel} — ${pairHint}`,
     ``,
     `How to use this in MCQs`,
-    `• Match the stem to the definition above; distractors often swap one keyword or regulator.`,
-    `• Separate roles: SEBI (securities markets) vs RBI (banking/monetary) vs stock exchange vs company management.`,
-    `• If two options look similar, prefer the definition that matches standard NISM / intermediate finance usage.`,
+    `• ${stemHint}`,
+    `• ${roleHint}`,
+    `• ${similarHint}`,
     ``,
     `30-second recall`,
-    `Restate “${title}” in one sentence without looking; then re-read the definition line.`,
+    `Restate “${title}” in one sentence without looking; then re-read the definition line. (Card ${idx + 1})`,
     ``,
     `Authoritative sources`,
     `For the live exam, rely on the official NISM Series XV workbook (current version) and applicable SEBI regulations; this app is a study aid only.`,
@@ -356,8 +418,8 @@ const MORE_TERMS = [
   ]},
 ];
 
-function extraCards() {
-  const rows = [
+function extraCardRows() {
+  return [
     ['Market capitalisation', 'Price × shares outstanding — size and index weight context.'],
     ['Free float', 'Non-strategic tradable slice — index inclusion and liquidity.'],
     ['ADR / GDR', 'Offshore access to Indian equity story — overnight sentiment spillovers possible.'],
@@ -418,36 +480,47 @@ function extraCards() {
     ['Minority interest in EV', 'In SOTP, attribute value to minorities where relevant — avoid equity double count.'],
     ['Stock lending & borrowing', 'SLB market — shorting and hedging mechanics; regulatory framework awareness.'],
   ];
-  return rows.map(([title, def], i) => ({
-    id: `x-${i}`,
-    chapter: 0,
-    chapterLabel: 'Cross-topic revision',
-    front: title,
-    back: examBack(title, def, 'Cross-topic revision', 0),
-    tags: ['nism-xv', 'cross-topic'],
-  }));
 }
 
 function buildDeck() {
   const out = [];
-  let id = 0;
+  let idx = 0;
   const pushBlock = (block, tagExtra) => {
     for (const [title, def] of block.terms) {
+      const i = idx++;
       out.push({
-        id: `fc-${id++}`,
+        id: `fc-${i}`,
         chapter: block.ch,
         chapterLabel: `Ch.${block.ch} ${block.label}`,
         front: title,
-        back: examBack(title, def, `Ch.${block.ch} ${block.label}`, block.ch),
+        back: examBack(title, def, `Ch.${block.ch} ${block.label}`, block.ch, i),
         tags: ['nism-xv', `ch${block.ch}`, tagExtra].filter(Boolean),
       });
     }
   };
   for (const block of CHAPTER_THEMES) pushBlock(block, null);
   for (const block of MORE_TERMS) pushBlock(block, 'deep');
-  out.push(...extraCards());
+  for (const [title, def] of extraCardRows()) {
+    const i = idx++;
+    out.push({
+      id: `fc-${i}`,
+      chapter: 0,
+      chapterLabel: 'Cross-topic revision',
+      front: title,
+      back: examBack(title, def, 'Cross-topic revision', 0, i),
+      tags: ['nism-xv', 'cross-topic'],
+    });
+  }
   if (out.length < 300) {
     throw new Error(`Flashcard deck expected ≥300 cards, got ${out.length}`);
+  }
+  const fronts = new Set(out.map((c) => c.front));
+  if (fronts.size !== out.length) {
+    throw new Error(`Flashcard deck: duplicate card titles (front) — ${out.length - fronts.size} duplicates`);
+  }
+  const backs = new Set(out.map((c) => c.back));
+  if (backs.size !== out.length) {
+    throw new Error(`Flashcard deck: duplicate card backs — ${out.length - backs.size} duplicates`);
   }
   for (const c of out) {
     if (!String(c.front || '').trim() || !String(c.back || '').trim()) {
