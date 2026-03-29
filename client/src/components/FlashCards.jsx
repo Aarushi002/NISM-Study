@@ -80,13 +80,13 @@ export function FlashCards() {
   return (
     <div className="flash-root">
       <p className="flash-intro">
-        Each card gives a <strong>high-yield topic</strong> and <strong>exam-style notes</strong> — definition,
-        how questions are framed, and a quick recall check. Work through all {total} cards in line with the NISM
-        Series XV syllabus.
+        Each card pairs a <strong>short cue</strong> with <strong>notes</strong> built from sentences in the official NISM Series XV
+        Research Analyst workbook (November 2025 PDF). Work through all {total} cards — every definition line is a distinct
+        excerpt; cross-check wording against your PDF before the exam.
       </p>
 
       <div className="flash-toolbar">
-        <div className="flash-stats mono">{total} cards · exam-focused notes</div>
+        <div className="flash-stats mono">{total} cards · workbook-sourced excerpts</div>
         <div className="flash-chapter-jump">
           <label htmlFor="ch-jump">Jump to chapter</label>
           <select
